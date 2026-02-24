@@ -15,6 +15,7 @@ It is not designed as a secure sandbox or production replacement for Python.
 ## Contents
 
 - [What E++ Is](#what-e-is)
+- [Installation](#installation)
 - [Quick Start](#quick-start)
 - [Project Layout](#project-layout)
 - [Beginner Website](#beginner-website)
@@ -48,24 +49,62 @@ The interpreter uses Python-style dynamic values under the hood:
 - function return values
 - expression evaluation (safe-ish but not fully sandboxed)
 
+## Installation
+
+### Fast install from GitHub
+
+```bash
+python -m pip install --upgrade pip
+python -m pip install git+https://github.com/liam13141/epp.git
+```
+
+Then run:
+
+```bash
+epp --version
+epp
+```
+
+If `epp` is not found in your terminal yet, use:
+
+```bash
+python -m epp_runner --version
+python -m epp_runner
+```
+
+### Install from local source
+
+From the project root:
+
+```bash
+python -m pip install -e .
+```
+
+### One-command installer scripts
+
+- Windows PowerShell: `.\install\install_epp.ps1`
+- Linux/macOS: `sh ./install/install_epp.sh`
+
+Full install guide: [INSTALL.md](INSTALL.md)
+
 ## Quick Start
 
 ### 1) Run a script
 
 ```bash
-python epp_runner.py examples/hello.epp
+epp examples/hello.epp
 ```
 
 ### 2) Start the REPL
 
 ```bash
-python epp_runner.py
+epp
 ```
 
 ### 3) Syntax check only (no execution)
 
 ```bash
-python epp_runner.py --check examples/advanced_control_flow.epp
+epp --check examples/advanced_control_flow.epp
 ```
 
 ### 4) Run tests
@@ -77,13 +116,19 @@ python -m unittest discover -s tests -p "test_*.py"
 ### 5) Run the pixel window game
 
 ```bash
-python epp_runner.py examples/pixel_dodge.epp
+epp examples/pixel_dodge.epp
 ```
 
 ### 6) Run the built-in Flask-like web demo (no external deps)
 
 ```bash
-python epp_runner.py examples/flask_hello.epp
+epp examples/flask_hello.epp
+```
+
+### 7) Backward-compatible direct runner
+
+```bash
+python epp_runner.py examples/hello.epp
 ```
 
 ## Project Layout
@@ -92,6 +137,8 @@ python epp_runner.py examples/flask_hello.epp
 - `epp_parser.py`: parser and AST node types
 - `epp_interpreter.py`: runtime evaluator/executor
 - `epp_runner.py`: CLI entry point and REPL shell
+- `pyproject.toml`: package metadata (`pip install`)
+- `install/`: one-command install scripts
 - `examples/`: runnable `.epp` scripts
 - `tests/`: regression tests (`unittest`)
 - `corce/`: beginner learning website (HTML/CSS/JS)

@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "epp-language"
+version = "0.2.0"
+description = "E++: an English-first interpreted language built on Python."
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [
+  { name = "E++ Project" }
+]
+license = { text = "MIT" }
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "License :: OSI Approved :: MIT License",
+  "Intended Audience :: Education",
+  "Topic :: Software Development :: Interpreters",
+]
+
+[project.urls]
+Homepage = "https://github.com/liam13141/epp"
+Repository = "https://github.com/liam13141/epp"
+
+[project.scripts]
+epp = "epp_runner:main"
+
+[tool.setuptools]
+py-modules = [
+  "epp_lexer",
+  "epp_parser",
+  "epp_interpreter",
+  "epp_runner",
+]

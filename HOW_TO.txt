@@ -9,6 +9,15 @@ Project root expected:
 1) QUICK START COMMANDS
 -----------------------
 
+Install from GitHub:
+  python -m pip install --upgrade pip
+  python -m pip install git+https://github.com/liam13141/epp.git
+
+Run with installed command:
+  epp examples/hello.epp
+  epp
+  epp --check examples/pixel_dodge.epp
+
 Run an E++ script:
   python epp_runner.py examples/hello.epp
 
@@ -26,6 +35,10 @@ Show language version:
 
 Run test suite:
   python -m unittest discover -s tests -p "test_*.py" -v
+
+One-command installer scripts (from project root):
+  PowerShell: .\install\install_epp.ps1
+  Linux/macOS: sh ./install/install_epp.sh
 
 
 2) REPL HOW TO
