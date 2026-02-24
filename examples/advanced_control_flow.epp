@@ -1,0 +1,31 @@
+# Demonstrates skip/stop, contains, and function return values.
+create list scores
+add 98 to scores
+add 75 to scores
+add 88 to scores
+add 61 to scores
+
+define letter_grade with score
+  if score is at least 90 then
+    return "A"
+  otherwise if score is at least 80 then
+    return "B"
+  otherwise if score is at least 70 then
+    return "C"
+  otherwise
+    return "D"
+  end if
+end define
+
+for each score in scores
+  if score is less than 70 then
+    say "Skipping low score: " + str(score)
+    skip for
+  end if
+  set grade to call letter_grade with score
+  say str(score) + " -> " + grade
+end for
+
+if scores contains 75 then
+  say "75 was in the list."
+end if

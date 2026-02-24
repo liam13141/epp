@@ -1,0 +1,207 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "E++",
+  "scopeName": "source.epp",
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#strings"
+    },
+    {
+      "include": "#lineCommands"
+    },
+    {
+      "include": "#functionDefinitions"
+    },
+    {
+      "include": "#variableDefinitions"
+    },
+    {
+      "include": "#flowKeywords"
+    },
+    {
+      "include": "#statementKeywords"
+    },
+    {
+      "include": "#webPlainEnglish"
+    },
+    {
+      "include": "#builtins"
+    },
+    {
+      "include": "#booleans"
+    },
+    {
+      "include": "#numbers"
+    },
+    {
+      "include": "#operators"
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.number-sign.epp",
+          "match": "#.*$"
+        }
+      ]
+    },
+    "lineCommands": {
+      "patterns": [
+        {
+          "name": "keyword.command.epp",
+          "match": "(?i)^\\s*(set|let|put|say|dsay|print|show|ask|add|increase|subtract|decrease|multiply|divide|remove|take|if|when|otherwise|else|repeat|while|for|define|function|return|give|call|run|create|make|fetch|start|end|finish|stop|break|skip|next)\\b"
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.epp",
+          "begin": "\"",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.begin.epp"
+            }
+          },
+          "end": "\"",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.end.epp"
+            }
+          },
+          "patterns": [
+            {
+              "name": "constant.character.escape.epp",
+              "match": "\\\\."
+            }
+          ]
+        },
+        {
+          "name": "string.quoted.single.epp",
+          "begin": "'",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.begin.epp"
+            }
+          },
+          "end": "'",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.end.epp"
+            }
+          },
+          "patterns": [
+            {
+              "name": "constant.character.escape.epp",
+              "match": "\\\\."
+            }
+          ]
+        }
+      ]
+    },
+    "functionDefinitions": {
+      "patterns": [
+        {
+          "name": "meta.function.epp",
+          "match": "\\b(?:define|function)\\s+([A-Za-z_][A-Za-z0-9_]*)",
+          "captures": {
+            "1": {
+              "name": "entity.name.function.epp"
+            }
+          }
+        }
+      ]
+    },
+    "variableDefinitions": {
+      "patterns": [
+        {
+          "name": "meta.assignment.epp",
+          "match": "\\b(?:set|let)\\s+([A-Za-z_][A-Za-z0-9_]*)\\b",
+          "captures": {
+            "1": {
+              "name": "variable.other.assignment.epp"
+            }
+          }
+        },
+        {
+          "name": "meta.assignment.epp",
+          "match": "\\b(?:create|make)\\s+list\\s+([A-Za-z_][A-Za-z0-9_]*)\\b",
+          "captures": {
+            "1": {
+              "name": "variable.other.assignment.epp"
+            }
+          }
+        },
+        {
+          "name": "meta.assignment.epp",
+          "match": "\\b(?:ask)\\b\\s+.+\\s+\\b(?:store|save)\\s+(?:in|as)\\s+([A-Za-z_][A-Za-z0-9_]*)",
+          "captures": {
+            "1": {
+              "name": "variable.other.assignment.epp"
+            }
+          }
+        }
+      ]
+    },
+    "flowKeywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.flow.epp",
+          "match": "\\b(?:if|when|otherwise|else|otherwise\\s+if|or\\s+if|repeat|while|for\\s+each|for\\s+every|for|define|function|return|give\\s+back|stop|break|skip|next|end\\s+if|finish\\s+if|end\\s+repeat|finish\\s+repeat|end\\s+for|finish\\s+for|end\\s+define|end\\s+function|finish\\s+function)\\b"
+        }
+      ]
+    },
+    "statementKeywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.statement.epp",
+          "match": "\\b(?:set|let|put|say|print|show|ask|create|make|add|increase|subtract|decrease|multiply|divide|remove|take|call|run|with|to|from|by|in|on|then|and|store|save|port)\\b"
+        }
+      ]
+    },
+    "webPlainEnglish": {
+      "patterns": [
+        {
+          "name": "support.type.web.epp",
+          "match": "\\b(?:website|web\\s+site|web\\s+app|web\\s+server|someone\\s+visits|someone\\s+posts|html\\s+page|fetch\\s+json\\s+from|fetch\\s+from)\\b"
+        }
+      ]
+    },
+    "builtins": {
+      "patterns": [
+        {
+          "name": "support.function.builtin.epp",
+          "match": "\\b(?:len|str|int|float|bool|range|list|abs|min|max|sum|round|sorted|random|random_int|random_float|choice|sleep|open_window|close_window|window_is_open|window_open|poll_window|present|clear_screen|draw_pixel|draw_rect|draw_text|key_down|key_pressed|set_window_title|flask_app|flask_get|flask_post|flask_run|flask_test_request|flask_html|flask_fetch|flask_fetch_json|create_web_app|when_someone_visits|when_someone_posts|start_web_server|test_web_request|make_html_page|fetch_from_api|fetch_json_from_api)\\b"
+        }
+      ]
+    },
+    "booleans": {
+      "patterns": [
+        {
+          "name": "constant.language.boolean.epp",
+          "match": "\\b(?:true|false|nothing)\\b"
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.epp",
+          "match": "\\b\\d+(?:\\.\\d+)?\\b"
+        }
+      ]
+    },
+    "operators": {
+      "patterns": [
+        {
+          "name": "keyword.operator.epp",
+          "match": "==|!=|<=|>=|<|>|\\+|\\-|\\*|/|%|\\(|\\)|\\[|\\]|\\{|\\}|,|\\."
+        }
+      ]
+    }
+  }
+}

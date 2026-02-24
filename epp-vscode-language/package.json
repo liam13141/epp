@@ -1,0 +1,35 @@
+{
+  "name": "epp-vscode-language",
+  "displayName": "E++ Language",
+  "description": "Syntax highlighting and language config for E++ files.",
+  "version": "0.1.0",
+  "publisher": "local",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "epp",
+        "aliases": [
+          "E++",
+          "epp"
+        ],
+        "extensions": [
+          ".epp"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "epp",
+        "scopeName": "source.epp",
+        "path": "./syntaxes/epp.tmLanguage.json"
+      }
+    ]
+  }
+}

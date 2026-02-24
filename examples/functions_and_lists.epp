@@ -1,0 +1,17 @@
+# Build a list, use functions, and loop through values.
+create list numbers
+add 2 to numbers
+add 4 to numbers
+add 6 to numbers
+
+define show_square with value
+  return value * value
+end define
+
+for each item in numbers
+  set squared to call show_square with item
+  say squared
+end for
+
+remove 4 from numbers
+say numbers

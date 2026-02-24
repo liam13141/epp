@@ -1,0 +1,16 @@
+say "Hello from E++!"
+set name to "Alice"
+say "Welcome, " + name
+
+set x to 10
+if x is greater than 10 then
+  say "x is big"
+otherwise if x is at least 10 then
+  say "x is exactly ten"
+otherwise
+  say "x is small"
+end if
+
+repeat 3 times
+  say "looping!"
+end repeat

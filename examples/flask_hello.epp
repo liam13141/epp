@@ -1,0 +1,25 @@
+# Dependency-free Flask-like web app in E++ (HTML + API fetch)
+
+create a website called "E++ Web Demo" and store in app
+
+function home_page
+  set html to "<!doctype html><html><body style='font-family: Arial;'>"
+  set html to html + "<h1>E++ Web Demo</h1>"
+  set html to html + "<p>Try <a href='/api/fact'>/api/fact</a> for JSON.</p>"
+  set html to html + "</body></html>"
+  give back html page html
+end function
+
+function api_fact
+  # Requires internet connection when called.
+  set data to call fetch_json_from_api with "https://catfact.ninja/fact"
+  give back data
+end function
+
+when someone visits "/" on app show home_page
+when someone visits "/about" on app show "This page is served by built-in E++ web support."
+when someone visits "/api/fact" on app show api_fact
+
+say "Open http://127.0.0.1:5000 in your browser"
+say "Press Ctrl+C in terminal to stop the server"
+start web server for app on "127.0.0.1" port 5000

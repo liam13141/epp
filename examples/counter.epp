@@ -1,0 +1,13 @@
+# Count from 1 to 5 using a repeat-while loop.
+set x to 1
+
+repeat while x is less than 6
+  say x
+  add 1 to x
+end repeat
+
+if x equals 6 then
+  say "done"
+otherwise
+  say "something went wrong"
+end if

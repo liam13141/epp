@@ -1,0 +1,225 @@
+# Number Quest Ultra: multi-round game with difficulty, hints, score, and streaks.
+
+define heat_text with distance
+  if distance is at most 1 then
+    return "SCORCHING HOT"
+  otherwise if distance is at most 3 then
+    return "Very hot"
+  otherwise if distance is at most 6 then
+    return "Warm"
+  otherwise if distance is at most 10 then
+    return "Cold"
+  otherwise
+    return "Ice cold"
+  end if
+end define
+
+define difficulty_badge with mode_name
+  if mode_name equals "Easy" then
+    return "[EASY]"
+  otherwise if mode_name equals "Normal" then
+    return "[NORMAL]"
+  otherwise if mode_name equals "Hard" then
+    return "[HARD]"
+  otherwise
+    return "[LEGEND]"
+  end if
+end define
+
+say "========================================="
+say "        NUMBER QUEST ULTRA"
+say "========================================="
+say "Guess the secret number and build a streak."
+say "Commands during a round:"
+say "  hint  -> one free clue (once per round)"
+say "  quit  -> leave the current round"
+
+set keep_playing to true
+set rounds_played to 0
+set wins to 0
+set total_score to 0
+set best_score to 0
+set current_streak to 0
+set best_streak to 0
+
+repeat while keep_playing
+  say ""
+  say "Choose difficulty:"
+  say "  1) Easy   (1..20, 7 attempts, x1.0 score)"
+  say "  2) Normal (1..50, 8 attempts, x1.3 score)"
+  say "  3) Hard   (1..100, 9 attempts, x1.7 score)"
+  say "  4) Legend (1..500, 12 attempts, x2.5 score)"
+  ask "Your choice: " and store in mode_text_raw
+  set mode_text to mode_text_raw.strip().lower()
+
+  if ["1", "easy", "e"] contains mode_text then
+    set mode_name to "Easy"
+    set min_num to 1
+    set max_num to 20
+    set max_attempts to 7
+    set multiplier to 1.0
+  otherwise if ["2", "normal", "n"] contains mode_text then
+    set mode_name to "Normal"
+    set min_num to 1
+    set max_num to 50
+    set max_attempts to 8
+    set multiplier to 1.3
+  otherwise if ["3", "hard", "h"] contains mode_text then
+    set mode_name to "Hard"
+    set min_num to 1
+    set max_num to 100
+    set max_attempts to 9
+    set multiplier to 1.7
+  otherwise if ["4", "legend", "l"] contains mode_text then
+    set mode_name to "Legend"
+    set min_num to 1
+    set max_num to 500
+    set max_attempts to 12
+    set multiplier to 2.5
+  otherwise
+    say "Unknown choice, defaulting to Normal."
+    set mode_name to "Normal"
+    set min_num to 1
+    set max_num to 50
+    set max_attempts to 8
+    set multiplier to 1.3
+  end if
+
+  set badge to call difficulty_badge with mode_name
+  say ""
+  say badge + " New round started."
+  say "Range: " + str(min_num) + " to " + str(max_num)
+  say "Attempts: " + str(max_attempts)
+
+  set secret to call random_int with min_num, max_num
+  set attempts to 0
+  set won to false
+  set gave_up to false
+  set hint_used to false
+  create list history
+
+  repeat while attempts < max_attempts and won == false and gave_up == false
+    ask "Guess a number: " and store in guess_text_raw
+    set guess_text to guess_text_raw.strip().lower()
+
+    if guess_text equals "quit" then
+      say "Round canceled."
+      set gave_up to true
+      stop repeat
+    otherwise if guess_text equals "hint" then
+      if hint_used then
+        say "Hint already used this round."
+      otherwise
+        set hint_used to true
+        if secret % 2 equals 0 then
+          say "Hint: the secret is an even number."
+        otherwise
+          say "Hint: the secret is an odd number."
+        end if
+
+        set midpoint to (min_num + max_num) / 2
+        if secret is greater than midpoint then
+          say "Hint: it's in the upper half of the range."
+        otherwise
+          say "Hint: it's in the lower half of the range."
+        end if
+      end if
+    otherwise if guess_text.isdigit() then
+      set guess to int(guess_text)
+
+      if guess < min_num or guess > max_num then
+        say "Out of range. Stay between " + str(min_num) + " and " + str(max_num) + "."
+      otherwise
+        add 1 to attempts
+        add guess to history
+        set remaining to max_attempts - attempts
+
+        if guess equals secret then
+          set won to true
+          say "Correct! You found it in " + str(attempts) + " attempt(s)."
+        otherwise
+          if guess is less than secret then
+            set direction_line to call choice with ["Too low.", "Aim higher.", "Not high enough."]
+          otherwise
+            set direction_line to call choice with ["Too high.", "Aim lower.", "That overshoots it."]
+          end if
+
+          set distance to abs(secret - guess)
+          set heat_line to call heat_text with distance
+          say direction_line + "  " + heat_line + "."
+
+          if remaining is greater than 0 then
+            say "Attempts left: " + str(remaining)
+          otherwise
+            say "No attempts left."
+          end if
+        end if
+      end if
+    otherwise
+      say "Please enter digits only, or type 'hint'/'quit'."
+    end if
+  end repeat
+
+  add 1 to rounds_played
+
+  if won then
+    add 1 to wins
+    add 1 to current_streak
+    if current_streak is greater than best_streak then
+      set best_streak to current_streak
+    end if
+
+    set range_bonus to int((max_num - min_num) / 2)
+    set attempt_bonus to (max_attempts - attempts + 1) * 20
+    set round_score to int((100 + range_bonus + attempt_bonus) * multiplier)
+
+    if hint_used then
+      subtract 25 from round_score
+    end if
+    if attempts is at most 2 then
+      add 50 to round_score
+    end if
+
+    add round_score to total_score
+    if round_score is greater than best_score then
+      set best_score to round_score
+    end if
+
+    say "Round score: " + str(round_score)
+    say "Win streak: " + str(current_streak)
+  otherwise
+    set current_streak to 0
+    if gave_up then
+      say "No score for canceled round."
+    otherwise
+      say "You lost this round. Secret was " + str(secret) + "."
+    end if
+  end if
+
+  if len(history) is greater than 0 then
+    say "Your guesses: " + str(history)
+  end if
+
+  say ""
+  say "Session stats:"
+  say "  Rounds: " + str(rounds_played)
+  say "  Wins: " + str(wins)
+  say "  Best streak: " + str(best_streak)
+  say "  Total score: " + str(total_score)
+  say "  Best round: " + str(best_score)
+
+  ask "Play again? (y/n): " and store in again_raw
+  set again to again_raw.strip().lower()
+  if ["y", "yes"] contains again then
+    set keep_playing to true
+  otherwise
+    set keep_playing to false
+  end if
+end repeat
+
+say ""
+say "========================================="
+say "Thanks for playing Number Quest Ultra!"
+say "Final stats -> Rounds: " + str(rounds_played) + ", Wins: " + str(wins) + ", Score: " + str(total_score)
+say "Best streak: " + str(best_streak) + ", Best round: " + str(best_score)
+say "========================================="

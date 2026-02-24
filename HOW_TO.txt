@@ -1,0 +1,388 @@
+E++ HOW TO GUIDE
+================
+
+This file is a practical "how to use everything" guide for this project.
+Project root expected:
+  c:\Users\rdskn\Downloads\desins\Code
+
+
+1) QUICK START COMMANDS
+-----------------------
+
+Run an E++ script:
+  python epp_runner.py examples/hello.epp
+
+Start interactive REPL:
+  python epp_runner.py
+
+Check script syntax only (no execution):
+  python epp_runner.py --check examples/pixel_dodge.epp
+
+Set custom loop safety limit:
+  python epp_runner.py --max-loop-iterations 200000 examples/number_quest.epp
+
+Show language version:
+  python epp_runner.py --version
+
+Run test suite:
+  python -m unittest discover -s tests -p "test_*.py" -v
+
+
+2) REPL HOW TO
+--------------
+
+Start REPL:
+  python epp_runner.py
+
+Exit REPL:
+  exit
+  quit
+
+REPL commands:
+  :help
+  :vars
+  :reset
+  :load examples/hello.epp
+
+Notes:
+  - You can type multi-line blocks in REPL.
+  - REPL waits until block is closed (end if/end repeat/end define/end for).
+
+
+3) CORE E++ SYNTAX
+------------------
+
+Variables:
+  set x to 10
+  let y be 20
+  put x + y into total
+  set name to "Alice"
+
+Output:
+  say "Hello"
+  print "Hello"
+  show "Hello"
+  say x
+
+Input:
+  ask "What is your name? " and store in name
+  ask "What is your name? " and save as name
+
+Math:
+  add 5 to x
+  increase x by 5
+  subtract 3 from x
+  decrease x by 3
+  multiply x by 2
+  divide x by 4
+
+Conditionals:
+  if x is greater than 10 then
+    say "big"
+  otherwise if x is at least 5 then
+    say "medium"
+  otherwise
+    say "small"
+  end if
+
+  when x is greater than 10 then
+    print "big"
+  else
+    print "small"
+  finish if
+
+Loops:
+  repeat 5 times
+    say "loop"
+  end repeat
+
+  do 5 times
+    print "loop"
+  finish repeat
+
+  repeat while x is less than 10
+    add 1 to x
+  end repeat
+
+  while x is less than 10 do
+    increase x by 1
+  finish repeat
+
+  for each item in mylist
+    say item
+  end for
+
+  for every item in mylist
+    print item
+  finish for
+
+Loop control:
+  stop repeat
+  skip repeat
+  break loop
+  next loop
+  stop for
+  skip for
+
+Functions:
+  define add_two with a and b
+    return a + b
+  end define
+
+  function add_two with a and b
+    give back a + b
+  finish function
+  # you can also close with: end function
+
+  call add_two with 2, 3
+  run add_two with 2, 3
+  set result to call add_two with 2, 3
+  set result2 to run add_two with 2, 3
+
+Lists:
+  create list nums
+  make list nums2
+  add 5 to nums
+  remove 5 from nums
+  take 5 from nums
+
+Comments:
+  # this is a comment
+
+Boolean and null-like values:
+  true
+  false
+  nothing
+
+
+4) CONDITIONS YOU CAN WRITE
+---------------------------
+
+Supported plain-English condition forms:
+  a is greater than b
+  a is greater than or equal to b
+  a is less than b
+  a is less than or equal to b
+  a is bigger than b
+  a is smaller than b
+  a is at least b
+  a is at most b
+  a equals b
+  a is equal to b
+  a is not b
+  a is not equal to b
+  a contains b
+  a does not contain b
+
+You can also use expression-style conditions:
+  if x > 5 and y < 10 then
+
+
+5) BUILT-IN FUNCTIONS
+---------------------
+
+General:
+  len, str, int, float, bool, range, list
+  abs, min, max, sum, round, sorted
+  random()
+  random(min, max)
+  random_int(min, max)
+  random_float(min, max)
+  choice(items)
+  sleep(seconds)
+
+Example:
+  set n to call random with 1, 10
+  say n
+
+Plain-English random expressions:
+  set roll to random between 1 and 6
+  set noise to random
+  set pick to random choice from items
+
+
+6) WINDOW + PIXEL GAME FUNCTIONS
+--------------------------------
+
+These open a real desktop window (tkinter).
+
+Functions:
+  open_window(width, height, title, pixel_size, background)
+  close_window()
+  window_is_open() / window_open()
+  poll_window()
+  present()
+  clear_screen(color)
+  draw_pixel(x, y, color)
+  draw_rect(x, y, w, h, color)
+  draw_text(x, y, text, color, size)
+  key_down(key_name)
+  key_pressed(key_name)
+  set_window_title(title)
+
+Minimal game loop:
+  call open_window with 64, 48, "My Game", 10, "black"
+  set running to true
+  repeat while running
+    call poll_window
+    set open_now to call window_is_open
+    if open_now == false then
+      set running to false
+    otherwise
+      call clear_screen with "black"
+      call draw_rect with 10, 10, 3, 3, "lime"
+      call present
+      call sleep with 0.03
+    end if
+  end repeat
+
+Common keys:
+  left right up down
+  a d w s
+  space return escape
+
+Run included pixel game:
+  python epp_runner.py examples/pixel_dodge.epp
+
+Built-in Flask-like web functions (no external dependencies):
+  flask_app(name)
+  flask_get(app, path, handler_or_text)
+  flask_post(app, path, handler_or_text)
+  flask_run(app, host, port)
+  flask_test_request(app, method, path, body)
+  flask_html(html, status)
+  flask_fetch(url, method, body, headers, timeout)
+  flask_fetch_json(url, method, body, headers, timeout)
+
+Beginner-friendly web aliases:
+  create_web_app(name)
+  when_someone_visits(app, path, handler_or_text)
+  when_someone_posts(app, path, handler_or_text)
+  start_web_server(app, host, port)
+  test_web_request(app, method, path, body)
+  make_html_page(html, status)
+  fetch_from_api(url)
+  fetch_json_from_api(url)
+
+Minimal web app:
+  set app to call create_web_app with "E++ Site"
+  call when_someone_visits with app, "/", call make_html_page with "<h1>Hello from E++</h1>"
+  say "Open http://127.0.0.1:5000"
+  call start_web_server with app, "127.0.0.1", 5000
+
+Plain-English statement forms:
+  create a website called "Easy Site" and store in app
+  when someone visits "/" on app show html page "<h1>Welcome</h1>"
+  when someone posts "/submit" on app show "Saved"
+  start web server for app on "127.0.0.1" port 5000
+  fetch from "https://example.com" and store in page_text
+  fetch json from "https://api.example.com/data" and store in data
+
+Startup log:
+  successful http://127.0.0.1:5000
+
+Request logs:
+  request GET http://127.0.0.1:5000/ -> 200
+  request POST http://127.0.0.1:5000/submit -> 200
+
+Stop the server:
+  Ctrl+C
+
+
+7) INCLUDED EXAMPLES
+--------------------
+
+Run each with:
+  python epp_runner.py <file>
+
+Files:
+  examples/hello.epp
+  examples/counter.epp
+  examples/functions_and_lists.epp
+  examples/advanced_control_flow.epp
+  examples/number_quest.epp
+  examples/readable_basics.epp
+  examples/pixel_dodge.epp
+  examples/flask_hello.epp
+  examples/test.epp
+
+Syntax-check all examples:
+  python epp_runner.py --check examples/hello.epp
+  (repeat for each file you care about)
+
+
+8) BEGINNER WEBSITE (CORCE)
+---------------------------
+
+Folder:
+  corce/
+
+Open:
+  corce/index.html
+
+What it contains:
+  - beginner lesson path
+  - quiz and checklist
+  - E++ <-> Python two-way translator
+  - quick cheat sheet
+
+
+9) VS CODE WORKFLOW
+-------------------
+
+Project has .vscode config:
+  - Run Current E++ File
+  - Run E++ REPL
+  - tasks for one-click running
+
+Typical flow:
+  1. Open .epp file
+  2. Use Run and Debug -> Run Current E++ File
+  3. Or terminal command: python epp_runner.py your_file.epp
+
+
+10) TROUBLESHOOTING
+-------------------
+
+If you see:
+  Oops! I don't understand ...
+Then:
+  - check spelling of command keywords
+  - make sure block endings exist (end if/end repeat/etc.)
+
+If you see:
+  Oops! I can't find 'x' ...
+Then:
+  - define it first with set x to ...
+
+If windowed game won't open:
+  - run on desktop Python (not headless server)
+  - ensure tkinter is available in your Python install
+
+If loops run forever:
+  - add stop condition
+  - or lower/raise --max-loop-iterations as needed
+
+
+11) MAKE YOUR OWN SCRIPT FAST
+-----------------------------
+
+Template:
+  set score to 0
+  repeat 5 times
+    add 1 to score
+  end repeat
+  say "Score: " + str(score)
+
+Save as:
+  examples/my_game.epp
+
+Run:
+  python epp_runner.py examples/my_game.epp
+
+
+12) IMPORTANT NOTE
+------------------
+
+E++ expressions are evaluated by Python under the hood.
+Do not run untrusted .epp files from unknown sources.

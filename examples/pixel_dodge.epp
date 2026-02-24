@@ -1,0 +1,159 @@
+# Pixel Dodge: real windowed E++ game.
+# Controls: Arrow keys or WASD to move, ESC to quit.
+
+say "Launching Pixel Dodge..."
+say "Controls: arrows or WASD. Avoid red blocks."
+
+call open_window with 80, 60, "E++ Pixel Dodge", 10, "#05070f"
+
+set px to 40
+set py to 52
+set lives to 3
+set score to 0
+set speed to 1
+set running to true
+
+set e1x to call random_int with 4, 76
+set e1y to -8
+set e2x to call random_int with 4, 76
+set e2y to -24
+set e3x to call random_int with 4, 76
+set e3y to -42
+
+repeat while running
+  call poll_window
+  set window_alive to call window_is_open
+
+  if window_alive == false then
+    set running to false
+  otherwise if lives <= 0 then
+    set running to false
+  otherwise
+    set move_left_1 to call key_down with "left"
+    set move_left_2 to call key_down with "a"
+    set move_right_1 to call key_down with "right"
+    set move_right_2 to call key_down with "d"
+    set move_up_1 to call key_down with "up"
+    set move_up_2 to call key_down with "w"
+    set move_down_1 to call key_down with "down"
+    set move_down_2 to call key_down with "s"
+
+    if move_left_1 or move_left_2 then
+      set px to px - 2
+    end if
+    if move_right_1 or move_right_2 then
+      set px to px + 2
+    end if
+    if move_up_1 or move_up_2 then
+      set py to py - 2
+    end if
+    if move_down_1 or move_down_2 then
+      set py to py + 2
+    end if
+
+    if px < 1 then
+      set px to 1
+    end if
+    if px > 76 then
+      set px to 76
+    end if
+    if py < 1 then
+      set py to 1
+    end if
+    if py > 56 then
+      set py to 56
+    end if
+
+    set exit_now to call key_pressed with "escape"
+    if exit_now then
+      call close_window
+      set running to false
+    end if
+
+    set e1y to e1y + speed
+    set e2y to e2y + speed
+    set e3y to e3y + speed
+
+    if e1y > 58 then
+      set e1x to call random_int with 4, 76
+      set e1y to call random_int with -40, -4
+      add 1 to score
+    end if
+    if e2y > 58 then
+      set e2x to call random_int with 4, 76
+      set e2y to call random_int with -40, -4
+      add 1 to score
+    end if
+    if e3y > 58 then
+      set e3x to call random_int with 4, 76
+      set e3y to call random_int with -40, -4
+      add 1 to score
+    end if
+
+    if abs(e1x - px) <= 2 and abs(e1y - py) <= 2 then
+      subtract 1 from lives
+      set e1x to call random_int with 4, 76
+      set e1y to call random_int with -40, -4
+    end if
+    if abs(e2x - px) <= 2 and abs(e2y - py) <= 2 then
+      subtract 1 from lives
+      set e2x to call random_int with 4, 76
+      set e2y to call random_int with -40, -4
+    end if
+    if abs(e3x - px) <= 2 and abs(e3y - py) <= 2 then
+      subtract 1 from lives
+      set e3x to call random_int with 4, 76
+      set e3y to call random_int with -40, -4
+    end if
+
+    if score >= 20 then
+      set speed to 2
+    end if
+    if score >= 50 then
+      set speed to 3
+    end if
+
+    call clear_screen with "#0b1020"
+
+    call draw_rect with px, py, 3, 3, "#39ff88"
+
+    call draw_rect with e1x, e1y, 2, 2, "#ff4d6d"
+    call draw_rect with e2x, e2y, 2, 2, "#ff4d6d"
+    call draw_rect with e3x, e3y, 2, 2, "#ff4d6d"
+
+    call draw_text with 1, 1, "Score: " + str(score), "#ffffff", 12
+    call draw_text with 1, 3, "Lives: " + str(lives), "#ffcd3c", 12
+    call draw_text with 1, 5, "ESC to quit", "#86d8ff", 11
+
+    call present
+    call sleep with 0.03
+  end if
+end repeat
+
+if call window_is_open then
+  call clear_screen with "#160f24"
+  call draw_text with 20, 20, "RUN OVER", "#ffd166", 20
+  call draw_text with 14, 27, "Final score: " + str(score), "#ffffff", 14
+  call draw_text with 7, 35, "Press SPACE or ENTER to close", "#9ad1ff", 12
+  call present
+
+  set waiting to true
+  repeat while waiting
+    call poll_window
+    set still_open to call window_is_open
+    if still_open == false then
+      set waiting to false
+    otherwise
+      set close_space to call key_pressed with "space"
+      set close_enter to call key_pressed with "return"
+      if close_space or close_enter then
+        call close_window
+        set waiting to false
+      end if
+      call present
+      call sleep with 0.03
+    end if
+  end repeat
+end if
+
+say "Pixel Dodge finished. Score: " + str(score)

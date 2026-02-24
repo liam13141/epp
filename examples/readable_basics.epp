@@ -1,0 +1,30 @@
+# Readable E++ style demo
+
+let name be "Ava"
+print "Welcome to readable E++"
+
+ask "How many steps today? " and save as steps_text
+put call int with steps_text into steps
+
+when steps is greater than or equal to 10000 then
+  show "Amazing! You reached your goal."
+or if steps is at least 5000 then
+  show "Great progress. Keep going!"
+else
+  show "Nice start. Every step counts."
+finish if
+
+make list badges
+add "starter" to badges
+when steps is at least 5000 then
+  add "walker" to badges
+finish if
+print badges
+
+function cheer with person and count
+  do count times
+    print "You got this, " + person + "!"
+  finish repeat
+finish function
+
+run cheer with name, 2
